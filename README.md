@@ -11,7 +11,7 @@ Complete **32-bit RISC-V (RV32I) processor** design and implementation on FPGA, 
 1. ⚡ **Single-Cycle Processor** - Basic single-cycle architecture
 2. 🚀 **5-Stage Pipeline Processor** - Pipelined architecture with hazard handling
 
-Developed using **SystemVerilog**, simulated on **ModelSim/Questa**, and synthesized using **Intel Quartus Prime** for Cyclone IV/MAX 10 FPGAs (DE2-115/DE10-Lite).
+Developed using **SystemVerilog**, simulated on **ModelSim/Questa**, and synthesized using **Intel Quartus Prime** for Cyclone II FPGA (DE2 board).
 
 ---
 
@@ -172,7 +172,7 @@ RISC-V-Project/
 | **Throughput**          | Low          | Medium               | **High**          |
 | **Area (Logic Elements)**| ~2,500 LEs  | ~3,200 LEs           | ~3,500 LEs        |
 
-> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone IV E (DE2-115) | Simulator: ModelSim-Intel 10.5b
+> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone II (DE2) | Simulator: ModelSim-Intel 10.5b
 
 
 
@@ -186,7 +186,7 @@ RISC-V-Project/
 | **Throughput**          | Low          | Medium               | **High**          |
 | **Area (Logic Elements)**| ~2,500 LEs  | ~3,200 LEs           | ~3,500 LEs        |
 
-> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone IV E (DE2-115) | Simulator: ModelSim-Intel 10.5b
+> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone II (DE2) | Simulator: ModelSim-Intel 10.5b
 
 ---
 
@@ -216,7 +216,7 @@ RISC-V-Project/
 
 - **Simulator**: ModelSim-Intel / Questa Sim
 - **Synthesis Tool**: Intel Quartus Prime (≥ 20.1)
-- **Target FPGA**: Cyclone IV E / MAX 10 (DE2-115 / DE10-Lite)
+- **Target FPGA**: Cyclone II (DE2)
 - **Language**: SystemVerilog (IEEE 1800-2012)
 
 ### Running Simulation
@@ -244,7 +244,7 @@ vsim -c tbench -do "run -all; quit"
 ### FPGA Synthesis
 
 1. Open Intel Quartus Prime
-2. Create new project, select FPGA target (Cyclone IV or MAX 10)
+2. Create new project, select FPGA target (Cyclone II EP2C35F672C6)
 3. Add files from `rtl/single_cycle/` or `rtl/pipeline/model2_forwarding/`
 4. Assign pins according to board constraints (`.sdc` files provided)
 5. Compile Design (Analysis & Synthesis → Fitter → Assembler)
