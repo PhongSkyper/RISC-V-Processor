@@ -1,25 +1,90 @@
-# RISC-V Processor Implementation
+# 32-bit RISC-V Processor (RV32I)
 
-🚀 **Thiết kế và triển khai bộ vi xử lý RISC-V 32-bit trên FPGA**
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![RISC-V](https://img.shields.io/badge/ISA-RISC--V%20RV32I-blue.svg)](https://riscv.org/)
+[![SystemVerilog](https://img.shields.io/badge/Language-SystemVerilog-orange.svg)](https://en.wikipedia.org/wiki/SystemVerilog)
 
-Dự án này bao gồm hai giai đoạn phát triển:
-1. **Single Cycle** - Thiết kế đơn chu kỳ cơ bản
-2. **Pipeline** - Thiết kế pipeline 5 tầng với xử lý hazard
+## 📋 Giới Thiệu Dự Án
+
+Dự án thiết kế và triển khai **bộ vi xử lý RISC-V 32-bit (RV32I)** hoàn chỉnh trên FPGA, bao gồm hai phiên bản:
+
+1. ⚡ **Single-Cycle Processor** - Kiến trúc đơn chu kỳ cơ bản
+2. 🚀 **5-Stage Pipeline Processor** - Kiến trúc pipeline với xử lý hazards
+
+Dự án được phát triển bằng **SystemVerilog**, mô phỏng trên **ModelSim/Questa**, và tổng hợp trên **Intel Quartus Prime** cho FPGA Cyclone IV/MAX 10 (DE2-115/DE10-Lite).
 
 ---
 
-## 📋 Tổng Quan Dự Án
+## 🎨 Kiến Trúc Thiết Kế
 
-Project này triển khai bộ xử lý RISC-V 32-bit (RV32I) từ kiến trúc cơ bản đến kiến trúc pipeline tối ưu. Tất cả module được viết bằng SystemVerilog và đã được kiểm chứng trên FPGA DE2/DE10.
+### 1️⃣ Single-Cycle Datapath
 
-### ✨ Tính Năng Chính
+![Single Cycle Architecture](docs/single_cycle_block.jpg)
 
-- **ISA Support**: RV32I Base Integer Instruction Set
-- **Architecture**: Single Cycle + Pipeline (5-stage)
-- **Hazard Handling**: Data forwarding, Load hazard detection
-- **Memory**: Instruction memory + Data memory (LSU)
-- **I/O**: Timer, GPIO peripherals
-- **Verification**: Testbench với SystemVerilog
+**Đặc điểm:**
+- Mỗi instruction thực thi trong **1 chu kỳ clock**
+- Datapath đơn giản: Fetch → Decode → Execute → Memory → Write Back
+- Tần số hoạt động thấp (~50 MHz) do critical path dài
+
+---
+
+### 2️⃣ 5-Stage Pipeline Architecture
+
+![Pipeline Architecture](docs/pipelined.png)
+
+**Các tầng Pipeline:**
+- **IF (Instruction Fetch)**: Lấy instruction từ bộ nhớ
+- **ID (Instruction Decode)**: Giải mã và đọc thanh ghi
+- **EX (Execute)**: Thực thi ALU operations
+- **MEM (Memory Access)**: Truy cập bộ nhớ dữ liệu
+- **WB (Write Back)**: Ghi kết quả vào register file
+
+**Pipeline với Forwarding:**
+
+![Pipeline with Forwarding](docs/fwd.png)
+
+**Pipeline không có Forwarding:**
+
+![Pipeline without Forwarding](docs/non_fwd.png)
+
+---
+
+## ⚙️ Tính Năng Kỹ Thuật
+
+### 📚 Instruction Set Architecture (ISA)
+
+Hỗ trợ đầy đủ **RV32I Base Integer Instruction Set** (47 instructions):
+
+| Loại | Instructions |
+|------|-------------|
+| **Arithmetic** | `ADD`, `SUB`, `ADDI` |
+| **Logic** | `AND`, `OR`, `XOR`, `ANDI`, `ORI`, `XORI` |
+| **Shift** | `SLL`, `SRL`, `SRA`, `SLLI`, `SRLI`, `SRAI` |
+| **Compare** | `SLT`, `SLTU`, `SLTI`, `SLTIU` |
+| **Load/Store** | `LB`, `LH`, `LW`, `LBU`, `LHU`, `SB`, `SH`, `SW` |
+| **Branch** | `BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU` |
+| **Jump** | `JAL`, `JALR` |
+| **Upper Immediate** | `LUI`, `AUIPC` |
+
+### 🛡️ Hazard Handling (Pipeline)
+
+#### ✅ Data Hazard
+- **Forwarding Unit**: Chuyển tiếp dữ liệu từ EX/MEM và MEM/WB stage về EX stage
+- **Bypassing**: Giải quyết RAW (Read After Write) hazards
+- **Load Hazard Detection**: Stall pipeline 1 chu kỳ khi phát hiện load-use hazard
+
+#### ✅ Control Hazard
+- **Branch Prediction**: Assume not-taken strategy
+- **Flushing**: Xóa instructions trong pipeline nếu branch taken
+- **Branch Target Calculation**: Tính toán địa chỉ branch tại EX stage
+
+### 🧮 Core Components
+
+- **Register File**: 32 thanh ghi 32-bit (x0-x31)
+- **ALU**: 32-bit Arithmetic Logic Unit với 13 operations
+- **LSU (Load-Store Unit)**: Xử lý aligned/unaligned memory access
+- **Branch Comparator**: So sánh cho các lệnh branch
+- **Immediate Generator**: Tạo immediate values cho tất cả format (I, S, B, U, J)
 
 ---
 
@@ -167,18 +232,45 @@ vsim -c tbench -do "run -all"
 
 ---
 
-## 📊 Kết Quả Thực Nghiệm
+## 🧪 Kết Quả Mô Phỏng (Simulation)
+
+### Waveform - Pipeline với Forwarding
+
+Dưới đây là kết quả mô phỏng chứng minh pipeline processor hoạt động đúng với xử lý Data Hazard thông qua Forwarding Unit:
+
+![Simulation Waveform](docs/mile3.png)
+
+**Điểm nhấn:**
+- ✅ **Forwarding Unit** chuyển tiếp dữ liệu giữa các stage
+- ✅ **Hazard Detection Unit** phát hiện load-use hazard và thực hiện stall
+- ✅ **Branch Handling** flush pipeline khi branch taken
+- ✅ Tất cả instructions trong RV32I được test và verify
+
+### So Sánh Hiệu Năng
+
+| Metric                  | Single Cycle | Pipeline (No Forward) | Pipeline (Forward) |
+|-------------------------|--------------|----------------------|-------------------|
+| **CPI (Cycles Per Inst)**| 1.0         | ~1.3                 | ~1.1              |
+| **Max Frequency**       | ~50 MHz      | ~100 MHz             | ~95 MHz           |
+| **IPC (Inst Per Cycle)**| 1.0          | ~0.77                | ~0.91             |
+| **Throughput**          | Low          | Medium               | **High**          |
+| **Area (Logic Elements)**| ~2,500 LEs  | ~3,200 LEs           | ~3,500 LEs        |
+
+> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone IV E (DE2-115) | Simulator: ModelSim-Intel 10.5b
+
+
 
 ### Performance Comparison
 
 | Metric                  | Single Cycle | Pipeline (No Forward) | Pipeline (Forward) |
 |-------------------------|--------------|----------------------|-------------------|
-| **CPI**                 | 1.0          | ~1.3                 | ~1.1              |
+| **CPI (Cycles Per Inst)**| 1.0         | ~1.3                 | ~1.1              |
 | **Max Frequency**       | ~50 MHz      | ~100 MHz             | ~95 MHz           |
-| **Throughput**          | Low          | Medium               | High              |
-| **Area (LEs)**          | ~2500        | ~3200                | ~3500             |
+| **IPC (Inst Per Cycle)**| 1.0          | ~0.77                | ~0.91             |
+| **Throughput**          | Low          | Medium               | **High**          |
+| **Area (Logic Elements)**| ~2,500 LEs  | ~3,200 LEs           | ~3,500 LEs        |
 
-> **Lưu ý**: Số liệu trên FPGA Cyclone IV E (DE2-115)
+> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone IV E (DE2-115) | Simulator: ModelSim-Intel 10.5b
 
 ---
 
@@ -202,27 +294,78 @@ vsim -c tbench -do "run -all"
 
 ---
 
-## 🤝 Đóng Góp
+## 🚀 Hướng Dẫn Sử Dụng
 
-Dự án này được phát triển bởi nhóm sinh viên Đại học Bách Khoa TP.HCM.
+### Yêu Cầu Hệ Thống
 
-### Contributors:
-- **Nhóm**: Group 23 - Kiến Trúc Máy Tính L01
-- **Giảng viên hướng dẫn**: (Tên GV)
+- **Simulator**: ModelSim-Intel / Questa Sim
+- **Synthesis Tool**: Intel Quartus Prime (≥ 20.1)
+- **Target FPGA**: Cyclone IV E / MAX 10 (DE2-115 / DE10-Lite)
+- **Language**: SystemVerilog (IEEE 1800-2012)
+
+### Chạy Simulation
+
+#### 1. Single-Cycle Processor:
+```bash
+cd rtl/single_cycle/
+vlog -sv *.sv
+vsim -c single_cycle -do "run -all; quit"
+```
+
+#### 2. Pipeline Processor (Model 2 - With Forwarding):
+```bash
+cd rtl/pipeline/model2_forwarding/
+vlog -sv *.sv
+
+# Compile testbench
+cd ../../simulation/tb_pipeline/model2_forwarding/
+vlog -sv *.sv *.svh
+
+# Run simulation
+vsim -c tbench -do "run -all; quit"
+```
+
+### Synthesize trên FPGA
+
+1. Mở Intel Quartus Prime
+2. Tạo project mới, chọn FPGA target (Cyclone IV hoặc MAX 10)
+3. Add files từ `rtl/single_cycle/` hoặc `rtl/pipeline/model2_forwarding/`
+4. Assign pins theo board constraint (`.sdc` files có sẵn)
+5. Compile Design (Analysis & Synthesis → Fitter → Assembler)
+6. Program FPGA qua USB-Blaster
 
 ---
 
-## 📝 Tài Liệu Tham Khảo
+## 📚 Tài Liệu Tham Khảo
 
-1. [RISC-V Specifications](https://riscv.org/technical/specifications/)
-2. [RV32I Base Integer Instruction Set](https://github.com/riscv/riscv-isa-manual)
-3. Computer Organization and Design: RISC-V Edition (David Patterson & John Hennessy)
+1. [RISC-V Specifications](https://riscv.org/technical/specifications/) - Official RISC-V ISA Manual
+2. [RV32I Base Integer Instruction Set](https://github.com/riscv/riscv-isa-manual) - Instruction Set Reference
+3. **Computer Organization and Design: RISC-V Edition** - David Patterson & John Hennessy
+4. [RISC-V Reader: An Open Architecture Atlas](http://www.riscvbook.com/) - Free RISC-V eBook
+
+### Báo Cáo Chi Tiết
+
+📄 Xem thêm trong [docs/KTMT_L01_Group_23.pdf](docs/KTMT_L01_Group_23.pdf) và [docs/KTMT_L01_Group_23_Milestone_3.pdf](docs/KTMT_L01_Group_23_Milestone_3.pdf)
 
 ---
 
-## 📧 Liên Hệ
+## 👨‍💻 Thông Tin Tác Giả
 
-Nếu có câu hỏi hoặc đóng góp, vui lòng tạo Issue hoặc Pull Request trên GitHub.
+**Sinh viên thực hiện:**
+- 👤 **Họ tên**: Nguyễn Thanh Phong
+- 🏫 **Trường**: Đại học Bách Khoa TP.HCM (HCMUT)
+- 📧 **Email**: [phongnguyens2468@gmail.com](mailto:phongnguyens2468@gmail.com)
+- 💼 **LinkedIn**: [Nguyễn Thanh Phong](https://www.linkedin.com/in/nguy%E1%BB%85n-thanh-phong-43b389294/)
+- 🔗 **GitHub**: [@PhongSkyper](https://github.com/PhongSkyper)
+
+**Giảng viên hướng dẫn:**
+- 👨‍🏫 **Tiến sĩ Trần Hoàng Linh**
+- 📚 Bộ môn Kiến Trúc Máy Tính, Khoa Khoa Học và Kỹ Thuật Máy Tính
+- 🏫 Đại học Bách Khoa TP.HCM
+
+**Môn học**: Kiến Trúc Máy Tính (Computer Architecture) - L01  
+**Nhóm**: Group 23  
+**Học kỳ**: HK1 2024-2025
 
 ---
 
@@ -230,6 +373,29 @@ Nếu có câu hỏi hoặc đóng góp, vui lòng tạo Issue hoặc Pull Reque
 
 MIT License - Free to use for educational purposes.
 
+```
+Copyright (c) 2024 Nguyễn Thanh Phong
+
+Permission is hereby granted, free of charge, to use, copy, modify, and distribute 
+this software for educational purposes.
+```
+
 ---
 
-**⭐ Nếu project hữu ích, đừng quên cho 1 star nhé! ⭐**
+## 🌟 Đóng Góp & Liên Hệ
+
+Nếu có câu hỏi, góp ý hoặc muốn đóng góp vào dự án:
+- 📬 **Email**: phongnguyens2468@gmail.com
+- 🐛 **Issues**: [GitHub Issues](https://github.com/PhongSkyper/RISC-V-Processor/issues)
+- 🔀 **Pull Requests**: Welcome! Please follow the coding style.
+
+---
+
+<div align="center">
+
+### ⭐ Nếu project hữu ích, hãy cho mình 1 star nhé! ⭐
+
+**Made with ❤️ by Phong Nguyen | HCMUT**
+
+</div>
+
