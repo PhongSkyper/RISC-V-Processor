@@ -1,0 +1,772 @@
+\input{preamble}
+\begin{document}
+
+% =========================
+% Title page 1
+% =========================
+\begin{titlepage}
+  \begin{tikzpicture}[remember picture,overlay,inner sep=0,outer sep=0]
+    \draw[blue!70!black,line width=4pt]
+      ([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A) --
+      ([xshift=2.4cm,yshift=-2cm]current page.north west) coordinate (B) --
+      ([xshift=2.4cm,yshift=2cm]current page.south west) coordinate (C) --
+      ([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate (D) -- cycle;
+
+    \draw ([yshift=0.5cm,xshift=-0.5cm]A) --
+          ([yshift=0.5cm,xshift=0.5cm]B) --
+          ([yshift=-0.5cm,xshift=0.5cm]B) --
+          ([yshift=-0.5cm,xshift=-0.5cm]B) --
+          ([yshift=0.5cm,xshift=-0.5cm]C) --
+          ([yshift=0.5cm,xshift=0.5cm]C) --
+          ([yshift=-0.5cm,xshift=0.5cm]C) --
+          ([yshift=-0.5cm,xshift=-0.5cm]D) --
+          ([yshift=0.5cm,xshift=-0.5cm]D) --
+          ([yshift=0.5cm,xshift=0.5cm]D) --
+          ([yshift=-0.5cm,xshift=0.5cm]A) --
+          ([yshift=-0.5cm,xshift=-0.5cm]A) --
+          ([yshift=0.5cm,xshift=-0.5cm]A);
+
+    \draw ([yshift=-0.3cm,xshift=0.3cm]A) --
+          ([yshift=-0.3cm,xshift=-0.3cm]B) --
+          ([yshift=0.3cm,xshift=-0.3cm]B) --
+          ([yshift=0.3cm,xshift=0.3cm]B) --
+          ([yshift=-0.3cm,xshift=0.3cm]C) --
+          ([yshift=-0.3cm,xshift=-0.3cm]C) --
+          ([yshift=0.3cm,xshift=-0.3cm]C) --
+          ([yshift=0.3cm,xshift=0.3cm]D) --
+          ([yshift=-0.3cm,xshift=0.3cm]D) --
+          ([yshift=-0.3cm,xshift=-0.3cm]D) --
+          ([yshift=0.3cm,xshift=-0.3cm]A) --
+          ([yshift=0.3cm,xshift=0.3cm]A) --
+          ([yshift=-0.3cm,xshift=0.3cm]A);
+  \end{tikzpicture}
+
+  \begin{center}
+    \textbf{\large VIETNAM NATIONAL UNIVERSITY, HO CHI MINH CITY}\\
+    \textbf{\large HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY}\\
+    \textbf{\large Faculty of Electrical and Electronic Engineering}\\[0.7cm]
+
+    \includegraphics[scale=1]{hcmut.png}\\[0.7cm]
+
+    \begin{tabular}{c}
+      \textbf{{\Large MILESTONE 3 REPORT}}\\[0.3cm]
+      \textbf{{\Large COMPUTER ARCHITECTURE}}\\[0.3cm]
+      \hline\\[-0.2cm]
+      \textbf{\textit{\Large TOPIC}}\\[0.2cm]
+      {\Large DESIGN OF PIPELINED RISC-V PROCESSORS}\\[0.2cm]
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \vspace{1cm}
+
+  \begin{table}[H]
+  \centering
+  \begin{tabular}{rl}
+    Instructional Lecturer: & \textbf{TRAN HOANG LINH} \\
+    \\[-0.3cm]
+    Class:  & \textbf{L01} \\
+    \\[-0.3cm]
+    Group:  & \textbf{23} \\
+    \\[-0.3cm]
+    Academic Year: & \textbf{2025--2026} \\
+    \\[-0.3cm]
+    Project Source Code: & \href{https://drive.google.com/drive/folders/1HE0_QGGTYdU_0wZzMaSOYfAEO60toDNy?usp=drive_link}{\textbf{Google Drive}} \\
+  \end{tabular}
+\end{table}
+
+
+  \vspace{1cm}
+  \begin{center}
+    {\footnotesize Ho Chi Minh City, January 2026}
+  \end{center}
+\end{titlepage}
+
+% =========================
+% Title page 2 (members)
+% =========================
+\begin{titlepage}
+  \begin{center}
+    \textbf{\large VIETNAM NATIONAL UNIVERSITY, HO CHI MINH CITY}\\
+    \textbf{\large HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY}\\
+    \textbf{\large Faculty of Electrical and Electronic Engineering}\\[0.7cm]
+
+    \includegraphics[scale=1]{hcmut.png}\\[0.7cm]
+
+    \begin{tabular}{c}
+      \textbf{{\Large MILESTONE 3 REPORT}}\\[0.3cm]
+      \textbf{{\Large COMPUTER ARCHITECTURE}}\\[0.3cm]
+      \hline\\[-0.2cm]
+      \textbf{\textit{\Large TOPIC}}\\[0.2cm]
+      {\Large DESIGN OF PIPELINED RISC-V PROCESSORS}\\[0.2cm]
+      \hline
+    \end{tabular}\\[0.8cm]
+
+    \textbf{\large Group's members table}\\[0.3cm]
+
+    \begin{tabular}{|c|l|c|c|}
+      \hline
+      & \hspace{1cm}\textbf{Name} & \textbf{Student ID} & \textbf{Contribution} \\ \hline
+      1 & Nguyen Thanh Phong & 2312626 & 100\% \\ \hline
+      2 & Nguyen Hoang Tuan  & 2313746 & 100\% \\ \hline
+      3 & Vu Tien Tuan       & 2313774 & 0\%   \\ \hline
+    \end{tabular}
+
+    \vfill
+    {\footnotesize Ho Chi Minh City, January 2026}
+  \end{center}
+\end{titlepage}
+
+% =========================
+% TOC
+% =========================
+\tableofcontents
+\newpage
+
+% =========================================================
+\section{Introduction}
+Milestone 3 upgrades our RV32I processor from the single-cycle design (Milestone 2) to a classic
+5-stage pipelined microarchitecture consisting of \textbf{IF, ID, EX, MEM, WB}.
+The main objectives are:
+\begin{itemize}
+  \item Implement a functional 5-stage pipeline and pass the provided ISA tests.
+  \item Handle pipeline hazards by using \textbf{stall/flush} control.
+  \item Evaluate and compare two baseline configurations:
+  \begin{itemize}
+    \item \textbf{Non-forwarding}: resolve data hazards mainly by stalling until write-back.
+    \item \textbf{Forwarding}: add forwarding paths to reduce stall cycles.
+  \end{itemize}
+\end{itemize}
+
+In this baseline implementation, we do \textbf{not} include a branch predictor. Instead, we use the standard
+baseline policy of \textbf{predict NOT-TAKEN} (PC increments by 4) and apply \textbf{flush} when the branch/jump
+is resolved as taken. Therefore, the branch misprediction rate is expected to be similar between
+non-forwarding and forwarding configurations; forwarding mainly improves performance by reducing data-hazard stalls.
+
+% =========================================================
+\section{System Overview}
+
+\subsection{Pipeline Stages}
+\begin{itemize}
+  \item \textbf{IF (Instruction Fetch)}: update PC, fetch instruction, compute PC+4.
+  \item \textbf{ID (Instruction Decode)}: decode, read register file, generate immediate.
+  \item \textbf{EX (Execute)}: ALU operations, address generation, branch/jump decision and target calculation.
+  \item \textbf{MEM (Memory)}: data memory access for loads/stores (and MMIO if enabled).
+  \item \textbf{WB (Writeback)}: select write-back value and write into the register file.
+\end{itemize}
+
+\subsection{Top-Level Datapath}
+Figure~\ref{fig:pipeline_top} illustrates the overall pipelined datapath, including pipeline registers,
+hazard control signals, and the optional forwarding unit.
+
+\begin{figure}[H]
+  \centering
+  % Put this image in the same folder as main.tex or adjust path accordingly.
+  \includegraphics[width=0.95\linewidth]{mile3.png}
+  \caption{Top-level 5-stage pipelined RV32I processor (hazard unit + optional forwarding).}
+  \label{fig:pipeline_top}
+\end{figure}
+
+\subsection{Control Flow (Predict NOT-TAKEN Baseline)}
+Our baseline control policy is \textbf{predict NOT-TAKEN}:
+\begin{itemize}
+  \item The fetch stage always continues with PC+4 by default.
+  \item Branch/jump decision is resolved in the EX stage.
+  \item If the control transfer is taken, wrong-path younger instructions are invalid and must be \textbf{flushed}
+        (converted into NOP-like behavior by clearing control signals).
+\end{itemize}
+
+\textbf{Debug/monitor signals (per project interface):}
+\begin{itemize}
+  \item \texttt{o\_ctrl}: asserted when a control-transfer instruction (branch/jump) is present in the tracked stage.
+  \item \texttt{o\_mispred}: asserted when a flush occurs due to a taken control transfer under NOT-TAKEN baseline.
+\end{itemize}
+
+% =========================================================
+\section{Design and Implementation}
+
+\subsection{Reused Modules From Milestone 2}
+The following blocks are reused with minimal changes:
+\begin{itemize}
+  \item \textbf{ALU}, \textbf{Immediate Generator}, \textbf{Register File}, and \textbf{Main Control Decoder}.
+  \item \textbf{Load/Store Unit}.
+\end{itemize}
+The major Milestone 3 additions are pipeline registers, stage-wise control propagation, and hazard handling logic.
+
+% -----------------------------
+\subsection{Pipeline Registers and Control Propagation}
+We implement four pipeline registers: \textbf{IF/ID}, \textbf{ID/EX}, \textbf{EX/MEM}, \textbf{MEM/WB}.
+Each pipeline register stores both datapath signals and a bundle of control signals required by downstream stages.
+
+\textbf{General rules:}
+\begin{itemize}
+  \item \textbf{Reset}: initialize stage registers into a safe NOP-like state.
+  \item \textbf{Stall}: hold current contents to delay younger instructions (PC and IF/ID typically stall together).
+  \item \textbf{Flush}: clear control signals so the flushed instruction produces no architectural side effects.
+\end{itemize}
+
+% -----------------------------
+\subsection{Hazard Handling Overview}
+In a 5-stage pipeline, hazards are categorized into:
+\begin{itemize}
+  \item \textbf{Data hazards (RAW)}: an instruction needs a register value that is still being produced by an earlier instruction.
+  \item \textbf{Control hazards}: the next PC depends on a branch/jump decision resolved later in the pipeline.
+\end{itemize}
+
+This report focuses on data-hazard mechanisms for two configurations:
+\begin{itemize}
+  \item Non-forwarding: stall on most RAW hazards until producer writes back.
+  \item Forwarding: forward ALU/WB results when possible and stall only in unavoidable cases (e.g., load-use).
+\end{itemize}
+
+% =========================================================
+\subsection{Non-forwarding Configuration}
+
+\subsubsection{Hazard Detection Unit Behavior}
+In the non-forwarding design, the pipeline stalls when the ID-stage instruction depends on a result that is still
+in-flight in EX or MEM stages. The hazard detection unit compares the source registers of the ID instruction
+(\texttt{rs1\_ID}, \texttt{rs2\_ID}) against the destination registers of the instructions in EX and MEM
+(\texttt{rd\_EX}, \texttt{rd\_MEM}), and uses \texttt{regWEn} to filter only instructions that will write back.
+
+To avoid false hazards, the input \texttt{uses\_rs2} is used:
+\begin{itemize}
+  \item If the current ID instruction does not consume \texttt{rs2} (e.g., I-type ALU ops, loads),
+        the hazard check against \texttt{rs2\_ID} is disabled.
+\end{itemize}
+
+When a hazard is detected, the unit forces:
+\begin{itemize}
+  \item \textbf{PC stall}: \texttt{pc\_en = 0} (PC is held).
+  \item \textbf{IF/ID stall}: \texttt{IF\_ID\_en = 0} (ID instruction is held).
+  \item \textbf{Insert bubble}: \texttt{ID\_EX\_flush = 1} (clear control signals into EX so EX gets a NOP).
+\end{itemize}
+
+\subsubsection{Hazard Logic Summary}
+Let \texttt{rd\_EX} and \texttt{rd\_MEM} be the destination registers of EX/MEM instructions.
+A stall is asserted when:
+\begin{itemize}
+  \item EX produces a register write and its destination matches \texttt{rs1\_ID}, or matches \texttt{rs2\_ID} when \texttt{uses\_rs2=1}.
+  \item MEM produces a register write and its destination matches \texttt{rs1\_ID}, or matches \texttt{rs2\_ID} when \texttt{uses\_rs2=1}.
+\end{itemize}
+Because there is no forwarding, the consumer must wait until the value is finally written back, resulting in
+multiple stall cycles depending on where the producer currently is in the pipeline.
+
+% =========================================================
+\subsection{Forwarding Configuration}
+
+\subsubsection{Forwarding Unit (EX Operand Selection)}
+The forwarding unit reduces stalls by selecting the most recent value for EX operands directly from later pipeline stages.
+For the instruction currently in EX:
+\begin{itemize}
+  \item If a matching destination register exists in MEM stage and writes back, forward from MEM (\texttt{forward=2'b10}).
+  \item Otherwise, if a matching destination register exists in WB stage and writes back, forward from WB (\texttt{forward=2'b01}).
+  \item Else, use the original operand read from register file (\texttt{forward=2'b00}).
+\end{itemize}
+
+We apply \textbf{priority} MEM over WB because MEM contains newer data for back-to-back dependencies.
+
+\subsubsection{Forwarding Control Signals}
+Two 2-bit control signals are generated:
+\begin{itemize}
+  \item \texttt{forwardA\_EX}: select source for EX operand A (rs1 path).
+  \item \texttt{forwardB\_EX}: select source for EX operand B (rs2 path).
+\end{itemize}
+Destination register \texttt{rd=0} is ignored to preserve x0 semantics.
+
+\subsubsection{Hazard Detection Unit Behavior}
+Even with forwarding, the \textbf{load-use} hazard typically cannot be resolved in the same cycle because load data is only
+available after MEM. Therefore, we stall only for the standard load-use condition:
+\begin{itemize}
+  \item If EX-stage instruction is a load (opcode \texttt{0000011}) and its destination \texttt{rd\_EX} matches \texttt{rs1\_ID} or \texttt{rs2\_ID},
+        then stall PC and IF/ID and insert a bubble into EX.
+\end{itemize}
+
+This makes the forwarding pipeline much less stall-heavy than the non-forwarding pipeline.
+
+\subsubsection{Hazard Logic Summary}
+With forwarding enabled, most RAW hazards are resolved without stalling by selecting the newest available value
+for EX operands from later stages. Forwarding decisions are based on register-number matching and write-enable signals:
+
+\begin{itemize}
+  \item \textbf{Forward from MEM (highest priority):}
+  if \texttt{regWEn\_MEM=1}, \texttt{rd\_MEM$\neq$0}, and \texttt{rd\_MEM = rsX\_EX} $\Rightarrow$ select MEM result.
+  \item \textbf{Forward from WB:}
+  else if \texttt{regWEn\_WB=1}, \texttt{rd\_WB$\neq$0}, and \texttt{rd\_WB = rsX\_EX} $\Rightarrow$ select WB result.
+  \item \textbf{No forwarding:}
+  otherwise use the register-file value captured in ID/EX.
+\end{itemize}
+
+Despite forwarding, a \textbf{load-use} dependency still requires a one-cycle stall because load data becomes available
+only after the MEM stage. The pipeline stalls when the EX instruction is a load and its destination \texttt{rd\_EX}
+matches \texttt{rs1\_ID} or \texttt{rs2\_ID}; in that case PC and IF/ID are held, and a bubble is inserted into ID/EX.
+
+% =========================================================
+\subsection{Stall/Flush Policy Summary}
+Table~\ref{tab:stall_flush_policy} summarizes the stall/flush behavior used in both configurations.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{tabularx}{\linewidth}{
+  >{\raggedright\arraybackslash}p{3.6cm}
+  >{\centering\arraybackslash}p{1.2cm}
+  >{\centering\arraybackslash}p{1.4cm}
+  >{\centering\arraybackslash}p{1.5cm}
+  >{\raggedright\arraybackslash}X
+}
+\toprule
+\textbf{Scenario} & \textbf{PC enable} & \textbf{IF/ID enable} & \textbf{ID/EX flush} & \textbf{Effect} \\
+\midrule
+No hazard &
+1 & 1 & 0 &
+Normal pipeline flow. \\
+
+Non-fwd RAW hazard (EX/MEM producer) &
+0 & 0 & 1 &
+Hold PC and IF/ID; insert a bubble in ID/EX until the producer value is available at write-back. \\
+
+Fwd load-use hazard (EX is load) &
+0 & 0 & 1 &
+One-cycle stall; after that, forwarding resolves the dependency. \\
+
+Taken branch/jump (predict NOT-TAKEN) &
+1 & \textit{Flush} & \textit{Flush} &
+Redirect PC to the target and flush younger wrong-path instructions in IF/ID and ID/EX. \\
+\bottomrule
+\end{tabularx}
+
+\caption{Stall/flush policy summary for non-forwarding and forwarding configurations.}
+\label{tab:stall_flush_policy}
+\end{table}
+
+
+% =========================================================
+\section{Verification}
+
+\subsection{Simulation Methodology}
+Verification is performed in two layers:
+
+\begin{itemize}
+  \item \textbf{Directed unit testcases (Forwarding configuration):}
+  We write short micro-programs to intentionally create specific data-dependency patterns so that the
+  forwarding unit must select the correct source (\texttt{EX/MEM} or \texttt{MEM/WB}) and obey the
+  priority rule (MEM over WB). For each testcase, we provide a pipeline timeline and a typed
+  \textit{Results} log showing the expected forwarding select codes.
+
+  \item \textbf{Course-provided ISA tests (Non-forwarding and Forwarding configurations):}
+  After validating the forwarding behavior with directed testcases, we run the official ISA regression
+  suite provided by the course. Correctness is determined by the testbench \texttt{PASS/FAIL} criteria.
+  At the end of each run, the testbench reports total executed cycles, total executed instructions, IPC/CPI,
+  and branch misprediction statistics. These ISA results are used for the final comparison between
+  the non-forwarding and forwarding baselines.
+\end{itemize}
+
+
+\subsection{Directed Unit Testcases}
+\subsubsection{Forwarding Unit Testcases (Forwarding configuration)}
+To validate the forwarding unit, we create directed micro-programs that force different forwarding sources:
+\textbf{EX/MEM (MEM stage)} and \textbf{MEM/WB (WB stage)}. In our design, the selection codes are:
+\texttt{2'b10} = forward from MEM (\texttt{alu\_mem}), \texttt{2'b01} = forward from WB (\texttt{wb\_data}),
+and \texttt{2'b00} = no forwarding (use ID/EX values). MEM has higher priority than WB.
+
+% =========================================================
+\paragraph{TC-F1: Forward from MEM (EX/MEM) for rs1}\par\noindent
+\begin{lstlisting}[style=asm,caption={TC-F1 (MEM forwarding): back-to-back dependency},label={lst:tc_f1}]
+add  x5, x1, x2
+sub  x6, x5, x3    # needs x5 immediately -> forwardA_EX = 2'b10
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=0.75cm]
+  % cycle grid
+  \foreach \c in {1,...,7} {
+    \draw[gray!25] (\c,0.6) -- (\c,-1.9);
+    \node[font=\scriptsize] at (\c,0.85) {\c};
+  }
+  % labels
+  \plabel{0}{add x5, x1, x2}
+  \plabel{1}{sub x6, x5, x3}
+
+  % add row (row=0)
+  \pipebox{1}{0}{IF}{white}
+  \pipebox{2}{0}{ID}{IDc}
+  \pipebox{3}{0}{EX}{EXc}
+  \pipebox{4}{0}{MEM}{MEMc}
+  \pipebox{5}{0}{WB}{WBc}
+
+  % sub row (row=1)
+  \pipebox{2}{1}{IF}{white}
+  \pipebox{3}{1}{ID}{IDc}
+  \pipebox{4}{1}{EX}{EXc}
+  \pipebox{5}{1}{MEM}{MEMc}
+  \pipebox{6}{1}{WB}{WBc}
+
+  % forwarding arrow (MEM -> EX at cycle 4)  (edge-to-edge)
+\draw[fwdarrow]
+  (cell-0-4.west)
+  to[out=180,in=180,looseness=1.25]
+  (cell-1-4.west);
+
+\end{tikzpicture}
+\caption{TC-F1 pipeline timeline (forward from MEM to EX for rs1).}
+\label{fig:tc_f1}
+\end{figure}
+
+\begin{tcolorbox}[breakable,title={Results},colback=white,colframe=black]
+\texttt{3: inst\_EX=add x5,x1,x2, ForwardA: 00, ForwardB: 00, PC\_fw\_A: 0, PC\_fw\_B: 0}\\
+\texttt{4: inst\_EX=sub x6,x5,x3, ForwardA: 10, ForwardB: 00, PC\_fw\_A: 0, PC\_fw\_B: 0}
+\end{tcolorbox}
+
+
+% =========================================================
+\paragraph{TC-F2: Forward from WB (MEM/WB) for rs2}\par\noindent
+\begin{lstlisting}[style=asm,caption={TC-F2 (WB forwarding): one-cycle gap dependency},label={lst:tc_f2}]
+add  x5, x1, x2
+addi x0, x0, 0      # nop to create 1-cycle gap
+sub  x6, x3, x5     # x5 available in WB -> forwardB_EX = 2'b01
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=0.75cm]
+  \foreach \c in {1,...,8} {
+    \draw[gray!25] (\c,0.6) -- (\c,-2.6);
+    \node[font=\scriptsize] at (\c,0.85) {\c};
+  }
+  \plabel{0}{add x5, x1, x2}
+  \plabel{1}{addi x0, x0, 0}
+  \plabel{2}{sub x6, x3, x5}
+
+  % add
+  \pipebox{1}{0}{IF}{white}
+  \pipebox{2}{0}{ID}{IDc}
+  \pipebox{3}{0}{EX}{EXc}
+  \pipebox{4}{0}{MEM}{MEMc}
+  \pipebox{5}{0}{WB}{WBc}
+
+  % addi (nop)
+  \pipebox{2}{1}{IF}{white}
+  \pipebox{3}{1}{ID}{IDc}
+  \pipebox{4}{1}{EX}{EXc}
+  \pipebox{5}{1}{MEM}{MEMc}
+  \pipebox{6}{1}{WB}{WBc}
+
+  % sub
+  \pipebox{3}{2}{IF}{white}
+  \pipebox{4}{2}{ID}{IDc}
+  \pipebox{5}{2}{EX}{EXc}
+  \pipebox{6}{2}{MEM}{MEMc}
+  \pipebox{7}{2}{WB}{WBc}
+
+  % forwarding arrow (WB -> EX at cycle 5)
+  \draw[fwdarrow]
+  (cell-0-5.west)
+  to[out=180,in=180,looseness=0.7]
+  (cell-2-5.west);
+
+\end{tikzpicture}
+\caption{TC-F2 pipeline timeline (forward from WB to EX for rs2).}
+\label{fig:tc_f2}
+\end{figure}
+
+\begin{tcolorbox}[breakable,title={Results},colback=white,colframe=black]
+\texttt{3: inst\_EX=add  x5,x1,x2,   ForwardA: 00, ForwardB: 00, PC\_fw\_A: 0, PC\_fw\_B: 0}\\
+\texttt{4: inst\_EX=addi x0,x0,0,    ForwardA: 00, ForwardB: 00, PC\_fw\_A: 0, PC\_fw\_B: 0}\\
+\texttt{5: inst\_EX=sub  x6,x3,x5,   ForwardA: 00, ForwardB: 01, PC\_fw\_A: 0, PC\_fw\_B: 0}
+\end{tcolorbox}
+
+
+% =========================================================
+\paragraph{TC-F3: MEM has priority over WB (mixed sources)}\par\noindent
+\begin{lstlisting}[style=asm,caption={TC-F3 (priority): MEM over WB},label={lst:tc_f3}]
+add  x5, x1, x2
+add  x6, x3, x4
+sub  x7, x5, x6     # at EX: x6 in MEM, x5 in WB -> rs2 from MEM, rs1 from WB
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=0.75cm]
+  \foreach \c in {1,...,9} {
+    \draw[gray!25] (\c,0.6) -- (\c,-2.6);
+    \node[font=\scriptsize] at (\c,0.85) {\c};
+  }
+  \plabel{0}{add x5, x1, x2}
+  \plabel{1}{add x6, x3, x4}
+  \plabel{2}{sub x7, x5, x6}
+
+  % add x5
+  \pipebox{1}{0}{IF}{white}
+  \pipebox{2}{0}{ID}{IDc}
+  \pipebox{3}{0}{EX}{EXc}
+  \pipebox{4}{0}{MEM}{MEMc}
+  \pipebox{5}{0}{WB}{WBc}
+
+  % add x6
+  \pipebox{2}{1}{IF}{white}
+  \pipebox{3}{1}{ID}{IDc}
+  \pipebox{4}{1}{EX}{EXc}
+  \pipebox{5}{1}{MEM}{MEMc}
+  \pipebox{6}{1}{WB}{WBc}
+
+  % sub x7
+  \pipebox{3}{2}{IF}{white}
+  \pipebox{4}{2}{ID}{IDc}
+  \pipebox{5}{2}{EX}{EXc}
+  \pipebox{6}{2}{MEM}{MEMc}
+  \pipebox{7}{2}{WB}{WBc}
+
+
+% MEM row1 -> EX row2 (cong hơn + ra trái hơn để né)
+\draw[fwdarrow]
+  (cell-1-5.west)
+  to[out=180,in=180,looseness=0.7]
+  (cell-2-5.west);
+
+\end{tikzpicture}
+\caption{TC-F3 pipeline timeline (mixed forwarding sources; MEM has higher priority than WB).}
+\label{fig:tc_f3}
+\end{figure}
+
+\begin{tcolorbox}[breakable,title={Results},colback=white,colframe=black]
+\texttt{3: inst\_EX=add x5,x1,x2, ForwardA: 00, ForwardB: 00, PC\_fw\_A: 0, PC\_fw\_B: 0}\\
+\texttt{4: inst\_EX=add x6,x3,x4, ForwardA: 00, ForwardB: 00, PC\_fw\_A: 0, PC\_fw\_B: 0}\\
+\texttt{5: inst\_EX=sub x7,x5,x6, ForwardA: 01, ForwardB: 10, PC\_fw\_A: 0, PC\_fw\_B: 0}
+\end{tcolorbox}
+
+\subsubsection{Hazard Unit Testcases (Forwarding configuration)}
+With forwarding enabled, the hazard unit stalls only for the classic load-use case because load data is
+available after MEM. During a stall, PC and IF/ID are held and one bubble (NOP) is injected into EX.
+Bubbles are shown as gray patterned cells without text.
+
+\paragraph{TC-H1: Load-use stall (lw $\rightarrow$ add)}\par\noindent
+\begin{lstlisting}[style=asm,caption={TC-H1 (load-use): one-cycle stall then forward from WB},label={lst:tc_h1}]
+lw   x5, 0(x1)
+add  x6, x5, x2     # uses loaded x5 -> must stall 1 cycle
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=0.75cm]
+  \foreach \c in {1,...,8} {
+    \draw[gray!25] (\c,0.6) -- (\c,-3.3);
+    \node[font=\scriptsize] at (\c,0.85) {\c};
+  }
+
+  \plabel{0}{lw x5, 0(x1)}
+  \plabel{1}{bubble (NOP)}
+  \plabel{2}{add x6, x5, x2}
+
+  % lw row0
+  \pipebox{1}{0}{IF}{white}
+  \pipebox{2}{0}{ID}{IDc}
+  \pipebox{3}{0}{EX}{EXc}
+  \pipebox{4}{0}{MEM}{MEMc}
+  \pipebox{5}{0}{WB}{WBc}
+
+  % bubble row1 (injected into EX at cycle 4), no text
+  \pipebubble{4}{1}{}
+  \pipebubble{5}{1}{}
+  \pipebubble{6}{1}{}
+
+  % add row2 (ID held for 1 extra cycle)
+  \pipebox{2}{2}{IF}{white}
+  \pipebox{3}{2}{ID}{IDc}
+  \pipebox{4}{2}{ID}{IDc}   % stall: hold in ID
+  \pipebox{5}{2}{EX}{EXc}
+  \pipebox{6}{2}{MEM}{MEMc}
+  \pipebox{7}{2}{WB}{WBc}
+
+  % after stall, forward from WB (lw) -> EX (add) at cycle 5
+  \draw[fwdarrow]
+    (cell-0-5.west)
+    to[out=180,in=180,looseness=0.7]
+    (cell-2-5.west);
+\end{tikzpicture}
+\caption{TC-H1 pipeline timeline (one-cycle load-use stall; bubble injected into EX).}
+\label{fig:tc_h1}
+\end{figure}
+
+\begin{tcolorbox}[breakable,title={Results},colback=white,colframe=black]
+\texttt{3: HZD=1 (pc\_en=0, IF\_ID\_en=0, ID\_EX\_flush=1)}\\
+\texttt{4: inst\_EX=bubble (NOP)}\\
+\texttt{5: inst\_EX=add x6,x5,x2, ForwardA: 01, ForwardB: 00, PC\_fw\_A: 0, PC\_fw\_B: 0}
+\end{tcolorbox}
+
+\paragraph{TC-H2: Load-use stall (lw $\rightarrow$ sw uses rs2)}\par\noindent
+\begin{lstlisting}[style=asm,caption={TC-H2 (load-use): lw then sw depends on rs2},label={lst:tc_h2}]
+lw   x5, 0(x1)
+sw   x5, 0(x2)      # store-data uses x5 (rs2) -> must stall 1 cycle
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1.05cm,y=0.75cm]
+  \foreach \c in {1,...,8} {
+    \draw[gray!25] (\c,0.6) -- (\c,-3.3);
+    \node[font=\scriptsize] at (\c,0.85) {\c};
+  }
+
+  \plabel{0}{lw x5, 0(x1)}
+  \plabel{1}{bubble (NOP)}
+  \plabel{2}{sw x5, 0(x2)}
+
+  % lw row0
+  \pipebox{1}{0}{IF}{white}
+  \pipebox{2}{0}{ID}{IDc}
+  \pipebox{3}{0}{EX}{EXc}
+  \pipebox{4}{0}{MEM}{MEMc}
+  \pipebox{5}{0}{WB}{WBc}
+
+  % bubble row1
+  \pipebubble{4}{1}{}
+  \pipebubble{5}{1}{}
+  \pipebubble{6}{1}{}
+
+  % sw row2 (ID held 1 cycle)
+  \pipebox{2}{2}{IF}{white}
+  \pipebox{3}{2}{ID}{IDc}
+  \pipebox{4}{2}{ID}{IDc}
+  \pipebox{5}{2}{EX}{EXc}
+  \pipebox{6}{2}{MEM}{MEMc}
+  \pipebox{7}{2}{WB}{WBc}
+
+  % forward store-data from WB (lw) -> EX (sw) at cycle 5 (rs2 path)
+  \draw[fwdarrow]
+    (cell-0-5.west)
+    to[out=180,in=180,looseness=0.7]
+    (cell-2-5.west);
+\end{tikzpicture}
+\caption{TC-H2 pipeline timeline (lw$\rightarrow$sw load-use stall; bubble injected into EX).}
+\label{fig:tc_h2}
+\end{figure}
+
+\begin{tcolorbox}[breakable,title={Results},colback=white,colframe=black]
+\texttt{3: HZD=1 (pc\_en=0, IF\_ID\_en=0, ID\_EX\_flush=1)}\\
+\texttt{4: inst\_EX=bubble (NOP)}\\
+\texttt{5: inst\_EX=sw x5,0(x2), ForwardA: 00, ForwardB: 01, PC\_fw\_A: 0, PC\_fw\_B: 0}
+\end{tcolorbox}
+
+
+\subsection{ISA Test Results}
+Figures~\ref{fig:isa_nonfwd} and~\ref{fig:isa_fwd} show the result summaries for non-forwarding and forwarding configurations.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.90\linewidth]{non_fwd.png}
+  \caption{ISA test summary (Non-forwarding configuration).}
+  \label{fig:isa_nonfwd}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.90\linewidth]{fwd.png}
+  \caption{ISA test summary (Forwarding configuration).}
+  \label{fig:isa_fwd}
+\end{figure}
+
+% =========================================================
+\section{Performance and Results}
+
+\subsection{Metrics}
+We report three key performance metrics:
+\begin{itemize}
+  \item \textbf{IPC (Instructions Per Cycle)}: higher IPC indicates fewer stalls and better pipeline utilization.
+  \item \textbf{CPI (Cycles Per Instruction)}: reciprocal of IPC; lower CPI is better.
+  \item \textbf{Branch Misprediction Rate}: with predict NOT-TAKEN baseline, taken control transfers cause flushes and increase mispredictions.
+\end{itemize}
+
+\subsection{ISA Test Performance (Non-forwarding vs Forwarding)}
+We report ISA test results only.
+Table~\ref{tab:isa_perf} summarizes the measured results.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\textbf{Metric} & \textbf{Non-forwarding} & \textbf{Forwarding} \\
+\midrule
+Total Clock Cycles Executed & 11132 & 7841 \\
+Total Instructions Executed & 4831 & 4831 \\
+IPC & 0.43 & 0.62 \\
+CPI & 2.30 & 1.62 \\
+Total Branch Instructions & 1604 & 1604 \\
+Total Branch Mispredictions & 1453 & 1453 \\
+Branch Misprediction Rate & 90.59\% & 90.59\% \\
+\bottomrule
+\end{tabular}
+\caption{ISA test performance comparison between non-forwarding and forwarding configurations.}
+\label{tab:isa_perf}
+\end{table}
+
+\subsection{Discussion}
+Forwarding provides a clear speedup on the ISA tests. Compared to the non-forwarding design,
+the forwarding design reduces total cycles from 11132 to 7841, i.e., 3291 fewer cycles (about 29.6\% reduction).
+This corresponds to an overall speedup of approximately 1.42$\times$.
+
+The IPC improves from 0.43 to 0.62 because forwarding eliminates many stall cycles caused by data hazards.
+Consequently, CPI drops from 2.30 to 1.62.
+
+The branch misprediction rate remains the same at 90.59\% for both configurations because both designs use the same
+\textbf{predict NOT-TAKEN} baseline policy. Forwarding improves data-hazard handling but does not change the control-hazard behavior.
+
+\subsection{Quartus Timing and Resource Utilization}
+For Quartus post-fit evaluation, both the instruction memory (IMEM) and data memory (DMEM) are configured to
+\textbf{2K 32-bit words} each. Timing results (Fmax, setup slack, hold slack) are taken from TimeQuest reports,
+while logic/register/memory utilization is taken from the Fitter summary.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Non-forwarding} & \textbf{Forwarding} \\
+\midrule
+Fmax (MHz) & 52.41 & 51.98 \\
+Worst Setup Slack (ns) & 0.921 & 0.762 \\
+Worst Hold Slack (ns) & 0.215 & 0.236 \\
+Total Logic Elements (count or \%) & 9,219 / 14,448 (64\%) & 9,141 / 14,448 (63\%) \\
+Total Registers (count or \%) & 1,858 & 1,743 \\
+Total Memory Bits (count or \%) & 65,536 / 239,616 (27\%) & 65,536 / 239,616 (27\%) \\
+\bottomrule
+\end{tabular}
+\caption{Quartus post-fit timing and resource summary.}
+\label{tab:quartus_summary}
+\end{table}
+
+
+
+% =========================================================
+\section{Conclusion}
+We successfully implemented a 5-stage pipelined RV32I processor and verified correctness using the course ISA tests.
+Two baseline configurations were evaluated:
+\begin{itemize}
+  \item \textbf{Non-forwarding}: correct execution is achieved by stalling on RAW hazards until results are written back.
+  \item \textbf{Forwarding}: forwarding paths significantly reduce stall cycles and improve pipeline utilization.
+\end{itemize}
+
+On the ISA tests, forwarding reduces total cycles by about 29.6\% and achieves roughly 1.42$\times$ speedup,
+increasing IPC from 0.43 to 0.62. The branch misprediction rate remains unchanged because both configurations
+use the same predict NOT-TAKEN control policy.
+
+% =========================================================
+\section{Future Work}
+Possible improvements include:
+\begin{itemize}
+  \item Implement a branch predictor to reduce control-hazard penalty and lower misprediction rate.
+  \item Optimize critical paths to improve Fmax and timing slack in Quartus.
+  \item Add additional benchmarks beyond ISA tests for broader performance evaluation.
+\end{itemize}
+
+% =========================================================
+\begin{thebibliography}{9}
+\bibitem{patterson}
+D. A. Patterson and J. L. Hennessy,
+\textit{Computer Organization and Design: RISC-V Edition},
+Morgan Kaufmann, 2017.
+\end{thebibliography}
+
+\end{document}

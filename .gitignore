@@ -1,0 +1,81 @@
+# Quartus II / Intel FPGA Files
+*.rpt
+*.summary
+*.smsg
+*.done
+*.jdi
+*.pin
+*.sof
+*.pof
+*.qws
+*.bak
+
+# Database and incremental build files
+db/
+incremental_db/
+output_files/*.rpt
+output_files/*.summary
+output_files/*.sof
+output_files/*.pof
+output_files/*.pin
+output_files/*.jdi
+
+# Simulation files
+*.vcd
+*.wlf
+*.vstf
+*.wdb
+work/
+transcript
+vsim.wlf
+modelsim.ini
+
+# OS Files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Python cache (if using Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Backup files from editors
+*~
+*.bak
+*.swp
+*.swo
+.*.swp
+.*.swo
+
+# Compiled netlists
+*.vo
+*.vho
+
+# Quartus specific
+*.qdf
+*.qtl
+greybox_tmp/
+hc_output/
+*.ddb
+*.cmp.html
+*.cmp.cdb
+*.cmp.hdb
+*.cnf.html
+*.cnf.cdb
+*.cnf.hdb
+
+# Keep essential project files
+!*.qpf
+!*.qsf
+!*.sdc

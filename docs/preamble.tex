@@ -1,0 +1,254 @@
+\documentclass[a4paper]{article}
+
+% =========================
+% Encoding & language
+% =========================
+\usepackage[utf8]{inputenc}
+\usepackage{vntex}
+\usepackage[english,vietnam]{babel}
+
+% Đổi caption sang tiếng Anh cho cả tiếng Việt
+\addto\captionsvietnamese{%
+  \renewcommand{\contentsname}{Table of Contents}%
+  \renewcommand{\listfigurename}{List of Figures}%
+  \renewcommand{\listtablename}{List of Tables}%
+  \renewcommand{\figurename}{Figure}%
+  \renewcommand{\tablename}{Table}%
+}
+
+% =========================
+% Basic packages
+% =========================
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{array,booktabs,multirow,longtable,tabularx}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+% =========================
+% Pretty box (tcolorbox) for logs / testcases
+% =========================
+\newtcolorbox{expbox}[1][]{
+  enhanced,
+  breakable,
+  colback=gray!5,
+  colframe=blue!70!black,
+  boxrule=0.8pt,
+  arc=2mm,
+  left=2mm,right=2mm,top=1mm,bottom=1mm,
+  before skip=6pt,
+  after skip=6pt,
+  title=\textbf{Expected log},
+  fonttitle=\small\bfseries,
+  coltitle=black,
+  #1
+}
+
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{lastpage}
+\usepackage{float}      % [H] cho float đứng yên
+\usepackage{placeins}   % \FloatBarrier để chốt float
+\usepackage{tikz}
+
+%=========================================================
+% Colors + TikZ styles for pipeline timeline
+% =========================================================
+\definecolor{IDc}{RGB}{255,249,196}
+\definecolor{EXc}{RGB}{255,224,178}
+\definecolor{MEMc}{RGB}{187,222,251}
+\definecolor{WBc}{RGB}{179,229,252}
+
+% nhớ có patterns + arrows.meta
+\usetikzlibrary{shapes.geometric,positioning,arrows.meta,patterns}
+
+\tikzset{
+  stg/.style={
+    draw,
+    trapezium,
+    trapezium left angle=78,
+    trapezium right angle=78,
+    trapezium stretches=true,
+    minimum height=5.5mm,
+    minimum width=11mm,
+    align=center,
+    text centered,
+    text height=1.6ex,
+    text depth=0.25ex,
+    inner xsep=0pt,
+    inner ysep=0pt,
+    font=\scriptsize,
+    line join=round
+  },
+  bubble/.style={
+    stg,
+    fill=gray!20,
+    pattern=north east lines,
+    pattern color=gray!70
+  },
+  fwdarrow/.style={->, line width=0.9pt, draw=red}
+}
+
+
+% =========================================================
+% Listings style for RISC-V asm (override global lstset)
+% =========================================================
+\lstdefinestyle{asm}{
+  language={},
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  numbers=none,
+  frame=single,
+  breaklines=true,
+  keepspaces=true,
+  showstringspaces=false,
+  backgroundcolor=\color{gray!10}
+}
+
+
+\usetikzlibrary{arrows,snakes,backgrounds}
+\newcommand{\pipebox}[4]{%
+  \node[stg, fill=#4] (cell-#2-#1) at (#1,-#2) {#3};%
+}
+\newcommand{\pipebubble}[2]{%
+  \node[bubble] (cell-#2-#1) at (#1,-#2) {\phantom{IF}};%
+}
+
+\newcommand{\plabel}[2]{\node[anchor=east,font=\scriptsize] at (0.4,-#1) {#2};}
+
+
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{algorithm2e}
+\usepackage{listings}
+\usepackage{matlab-prettifier}
+
+% =========================
+% Geometry
+% =========================
+\geometry{
+  a4paper,
+  total={160mm,240mm},
+  left=30mm,
+  top=25mm,
+}
+
+% =========================
+% Caption setup
+% =========================
+\usepackage{caption}
+\usepackage{subcaption}
+
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Table}
+
+\captionsetup[figure]{labelfont={small,bf},textfont={small,it},
+                      aboveskip=4pt,belowskip=2pt}
+\captionsetup[table]{labelfont={small,bf},textfont={small,it},
+                     aboveskip=6pt,belowskip=2pt}
+
+% =========================
+% Hyperref (đặt gần cuối)
+% =========================
+\usepackage[unicode]{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+% =========================
+% Header / footer
+% =========================
+\usepackage{fancyhdr}
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}
+
+\fancyhead{} % clear
+\fancyfoot{} % clear
+
+\fancyhead[L]{%
+  \begin{tabular}{rl}
+    \begin{picture}(25,15)(0,0)
+      \put(0,-8){\includegraphics[width=8mm,height=8mm]{hcmut.png}}
+    \end{picture}&
+    \begin{tabular}{l}
+      \textbf{\ttfamily Ho Chi Minh City University of Technology}\\
+      \textbf{\ttfamily Faculty of Electrical and Electronic Engineering}
+    \end{tabular}
+  \end{tabular}
+}
+
+\fancyhead[R]{}
+
+\fancyfoot[L]{\scriptsize \ttfamily Milestone 3 Report}
+\fancyfoot[R]{\scriptsize \ttfamily Page \thepage/\pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+% =========================
+% Section depth & subsubsub
+% =========================
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{3}
+
+\makeatletter
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\@alph\c@subsubsubsection}
+\newcommand\subsubsubsection{\@startsection{subsubsubsection}{4}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\normalfont\normalsize\bfseries}}
+\newcommand*\l@subsubsubsection{\@dottedtocline{3}{10.0em}{4.1em}}
+\newcommand*{\subsubsubsectionmark}[1]{}
+\makeatother
+
+% =========================
+% Figure numbering by section
+% =========================
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+
+% =========================
+% Theorem environments
+% =========================
+\newtheorem{theorem}{{\bf Định lý}}
+\newtheorem{property}{{\bf Tính chất}}
+\newtheorem{proposition}{{\bf Mệnh đề}}
+\newtheorem{corollary}[proposition]{{\bf Hệ quả}}
+\newtheorem{lemma}[proposition]{{\bf Bổ đề}}
+\theoremstyle{definition}
+\newtheorem{exer}{Bài toán}
+
+% =========================
+% Listings
+% =========================
+\lstset{
+  language=R,
+  basicstyle=\footnotesize\sffamily,
+  commentstyle=\ttfamily\color{black},
+  numbers=left,
+  numberstyle=\ttfamily\color{black}\footnotesize,
+  stepnumber=1,
+  numbersep=5pt,
+  backgroundcolor=\color{Dandelion},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  frame=single,
+  tabsize=2,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=false,
+  title=\lstname,
+  escapeinside={},
+  keywordstyle={},
+  morekeywords={}
+}
+
+\everymath{\color{black}}
+\sloppy

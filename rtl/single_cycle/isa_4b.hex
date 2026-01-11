@@ -1,0 +1,32 @@
+100082B7    //  0: LUI   x5,  0x10008        ; x5 = BASE_HEX_BIN = 0x10008000
+10009337    //  1: LUI   x6,  0x10009        ; x6 = BASE_HEX_CTRL = 0x10009000
+100103B7    //  2: LUI   x7,  0x10010        ; x7 = BASE_SW      = 0x10010000
+10007E37    //  3: LUI   x28, 0x10007        ; x28=BASE_KEY_EV   = 0x10007000
+
+00200513    //  4: ADDI  x10,x0,2            ; a0=2
+10056513    //  5: ORI   x10,x10,0x100       ; a0|=0x100 -> 0x102 (SIGN=1, mode=2)
+00A32023    //  6: SW    x10,0(x6)           ; HEX_CTRL = 0x00000102
+
+00000413    //  7: ADDI  x8, x0, 0           ; s0(ACC)=0
+
+000E2E83    //  8: LW    x29,0(x28)          ; t4 = KEY_EV
+002EFF13    //  9: ANDI  x30,x29,0b10        ; t5 = event KEY1?
+000F0C63    // 10: BEQ   x30,x0, +?          ; nếu không có KEY1 -> nhảy xuống chk_sub
+
+0003AF83    // 11: LW    x31,0(x7)           ; t6 = SW
+01F40433    // 12: ADD   x8, x8, x31         ; ACC += SW
+00200F13    // 13: ADDI  x30,x0,0b10         ; t5 = 0x2 (mask KEY1)
+01EE2023    // 14: SW    x30,0(x28)          ; clear KEY1 event
+01C0006F    // 15: JAL   x0, +0x1C           ; nhảy đến show
+
+004EFF13    // 16: ANDI  x30,x29,0b100       ; t5 = event KEY2?
+000F0A63    // 17: BEQ   x30,x0, +?          ; nếu không có KEY2 -> nhảy đến show
+
+0003AF83    // 18: LW    x31,0(x7)           ; t6 = SW
+41F40433    // 19: SUB   x8, x8, x31         ; ACC -= SW  (2's comp signed)
+00400F13    // 20: ADDI  x30,x0,0b100        ; t5 = 0x4 (mask KEY2)
+01EE2023    // 21: SW    x30,0(x28)          ; clear KEY2 event
+
+0082A023    // 22: SW    x8, 0(x5)           ; HEX_BIN = ACC (signed shown via SIGN)
+
+FC5FF06F    // 23: JAL   x0, loop            ; quay lại vòng lặp
