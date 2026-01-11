@@ -73,10 +73,19 @@ Hỗ trợ đầy đủ **RV32I Base Integer Instruction Set** (47 instructions)
 - **Bypassing**: Giải quyết RAW (Read After Write) hazards
 - **Load Hazard Detection**: Stall pipeline 1 chu kỳ khi phát hiện load-use hazard
 
-#### ✅ Control Hazard
-- **Branch Prediction**: Assume not-taken strategy
+#### ✅ Control Hazard (Current Implementation)
+- **Branch Prediction**: Assume not-taken strategy (simple predictor)
 - **Flushing**: Xóa instructions trong pipeline nếu branch taken
 - **Branch Target Calculation**: Tính toán địa chỉ branch tại EX stage
+
+#### 🚧 Advanced Branch Prediction (In Development)
+Đang phát triển các thuật toán Branch Prediction nâng cao để tối ưu hiệu năng:
+
+- **G-share Predictor**: Global history-based dynamic predictor với XOR hashing
+- **Local Predictor**: Local history table (LHT) cho từng branch instruction
+- **Tournament Predictor**: Meta-predictor kết hợp Global và Local predictor để đạt accuracy cao nhất
+
+> 🎯 **Mục tiêu**: Giảm branch penalty từ 2-3 cycles xuống còn <1 cycle, tăng IPC lên >1.2
 
 ### 🧮 Core Components
 
@@ -232,21 +241,7 @@ vsim -c tbench -do "run -all"
 
 ---
 
-## 🧪 Kết Quả Mô Phỏng (Simulation)
-
-### Waveform - Pipeline với Forwarding
-
-Dưới đây là kết quả mô phỏng chứng minh pipeline processor hoạt động đúng với xử lý Data Hazard thông qua Forwarding Unit:
-
-![Simulation Waveform](docs/mile3.png)
-
-**Điểm nhấn:**
-- ✅ **Forwarding Unit** chuyển tiếp dữ liệu giữa các stage
-- ✅ **Hazard Detection Unit** phát hiện load-use hazard và thực hiện stall
-- ✅ **Branch Handling** flush pipeline khi branch taken
-- ✅ Tất cả instructions trong RV32I được test và verify
-
-### So Sánh Hiệu Năng
+## 📊 So Sánh Hiệu Năng
 
 | Metric                  | Single Cycle | Pipeline (No Forward) | Pipeline (Forward) |
 |-------------------------|--------------|----------------------|-------------------|
