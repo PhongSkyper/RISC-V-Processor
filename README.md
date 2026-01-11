@@ -162,35 +162,7 @@ RISC-V-Project/
 
 ---
 
-## 📊 Performance Comparison
-
-| Metric                  | Single Cycle | Pipeline (No Forward) | Pipeline (Forward) |
-|-------------------------|--------------|----------------------|-------------------|
-| **CPI (Cycles Per Inst)**| 1.0         | ~1.3                 | ~1.1              |
-| **Max Frequency**       | ~50 MHz      | ~100 MHz             | ~95 MHz           |
-| **IPC (Inst Per Cycle)**| 1.0          | ~0.77                | ~0.91             |
-| **Throughput**          | Low          | Medium               | **High**          |
-| **Area (Logic Elements)**| ~2,500 LEs  | ~3,200 LEs           | ~3,500 LEs        |
-
-> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone II (DE2) | Simulator: ModelSim-Intel 10.5b
-
-
-
-### Performance Comparison
-
-| Metric                  | Single Cycle | Pipeline (No Forward) | Pipeline (Forward) |
-|-------------------------|--------------|----------------------|-------------------|
-| **CPI (Cycles Per Inst)**| 1.0         | ~1.3                 | ~1.1              |
-| **Max Frequency**       | ~50 MHz      | ~100 MHz             | ~95 MHz           |
-| **IPC (Inst Per Cycle)**| 1.0          | ~0.77                | ~0.91             |
-| **Throughput**          | Low          | Medium               | **High**          |
-| **Area (Logic Elements)**| ~2,500 LEs  | ~3,200 LEs           | ~3,500 LEs        |
-
-> **Testing Platform**: Intel Quartus Prime 20.1 | FPGA: Cyclone II (DE2) | Simulator: ModelSim-Intel 10.5b
-
----
-
-## 📖 Instruction Set Support
+##  Instruction Set Support
 
 ### Supported Instructions (RV32I)
 
