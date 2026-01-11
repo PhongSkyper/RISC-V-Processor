@@ -248,7 +248,7 @@ vsim -c tbench -do "run -all; quit"
 
 **Supervisor:**
 - 👨‍🏫 **Dr. Tran Hoang Linh**
-- 📚 Department of Computer Architecture, Faculty of Computer Science and Engineering
+- 📚 Department of Electronics, Faculty of Electrical and Electronics Engineering
 - 🏫 Ho Chi Minh City University of Technology (HCMUT)
 
 **Course**: Computer Architecture - L01  
