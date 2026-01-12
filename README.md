@@ -4,18 +4,18 @@
 [![RISC-V](https://img.shields.io/badge/ISA-RISC--V%20RV32I-blue.svg)](https://riscv.org/)
 [![SystemVerilog](https://img.shields.io/badge/Language-SystemVerilog-orange.svg)](https://en.wikipedia.org/wiki/SystemVerilog)
 
-## 📋 Project Overview
+##  Project Overview
 
 Complete **32-bit RISC-V (RV32I) processor** design and implementation on FPGA, featuring two versions:
 
-1. ⚡ **Single-Cycle Processor** - Basic single-cycle architecture
-2. 🚀 **5-Stage Pipeline Processor** - Pipelined architecture with hazard handling
+1.  **Single-Cycle Processor** - Basic single-cycle architecture
+2.  **5-Stage Pipeline Processor** - Pipelined architecture with hazard handling
 
 Developed using **SystemVerilog**, simulated on **ModelSim/Questa**, and synthesized using **Intel Quartus Prime** for Cyclone II FPGA (DE2 board).
 
 ---
 
-## 🎨 Architecture Design
+##  Architecture Design
 
 ### 1️⃣ Single-Cycle Datapath
 
@@ -51,7 +51,7 @@ Developed using **SystemVerilog**, simulated on **ModelSim/Questa**, and synthes
 
 ## ⚙️ Technical Features
 
-### 📚 Instruction Set Architecture (ISA)
+###  Instruction Set Architecture (ISA)
 
 Full support for **RV32I Base Integer Instruction Set** (47 instructions):
 
@@ -66,7 +66,7 @@ Full support for **RV32I Base Integer Instruction Set** (47 instructions):
 | **Jump** | `JAL`, `JALR` |
 | **Upper Immediate** | `LUI`, `AUIPC` |
 
-### 🛡️ Hazard Handling (Pipeline)
+###  Hazard Handling (Pipeline)
 
 #### ✅ Data Hazard
 - **Forwarding Unit**: Forward data from EX/MEM and MEM/WB stages back to EX stage
@@ -78,16 +78,16 @@ Full support for **RV32I Base Integer Instruction Set** (47 instructions):
 - **Flushing**: Flush instructions in pipeline if branch is taken
 - **Branch Target Calculation**: Calculate branch address at EX stage
 
-#### 🚧 Advanced Branch Prediction (In Development)
+####  Advanced Branch Prediction (In Development)
 Developing advanced branch prediction algorithms to optimize performance:
 
 - **G-share Predictor**: Global history-based dynamic predictor with XOR hashing
 - **Local Predictor**: Local history table (LHT) for each branch instruction
 - **Tournament Predictor**: Meta-predictor combining Global and Local predictors for highest accuracy
 
-> 🎯 **Goal**: Reduce branch penalty from 2-3 cycles to <1 cycle, increase IPC to >1.2
+>  **Goal**: Reduce branch penalty from 2-3 cycles to <1 cycle, increase IPC to >1.2
 
-### 🧮 Core Components
+###  Core Components
 
 - **Register File**: 32 registers of 32-bit each (x0-x31)
 - **ALU**: 32-bit Arithmetic Logic Unit with 13 operations
@@ -102,14 +102,14 @@ Developing advanced branch prediction algorithms to optimize performance:
 ```
 RISC-V-Project/
 │
-├── docs/                           # 📄 Documentation and design diagrams
+├── docs/                           # Documentation and design diagrams
 │   ├── single_cycle_block.jpg      # Single Cycle block diagram
 │   ├── alu_design.jpg              # ALU design
 │   ├── lsu.jpg                     # Load-Store Unit
 │   ├── regfile.jpg                 # Register File
 │   └── KTMT_L01_Group_23.pdf       # Detailed report
 │
-├── rtl/                            # 💻 Source Code (SystemVerilog)
+├── rtl/                            # Source Code (SystemVerilog)
 │   │
 │   ├── single_cycle/               # Phase 1: Single-cycle design
 │   │   ├── single_cycle.sv         # Top module
@@ -142,7 +142,7 @@ RISC-V-Project/
 │           ├── stage_*.sv          # Pipeline Registers (IF/ID, ID/EX, EX/MEM, MEM/WB)
 │           └── ...
 │
-└── simulation/                     # 🧪 Testbench and Verification
+└── simulation/                     # Testbench and Verification
     │
     ├── tb_single_cycle/            # (Single cycle testbench if available)
     │
@@ -182,7 +182,7 @@ RISC-V-Project/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### System Requirements
 
@@ -224,7 +224,7 @@ vsim -c tbench -do "run -all; quit"
 
 ---
 
-## 📚 References
+## References
 
 1. [RISC-V Specifications](https://riscv.org/technical/specifications/) - Official RISC-V ISA Manual
 2. [RV32I Base Integer Instruction Set](https://github.com/riscv/riscv-isa-manual) - Instruction Set Reference
@@ -237,19 +237,19 @@ vsim -c tbench -do "run -all; quit"
 
 ---
 
-## 👨‍💻 Author Information
+## Author Information
 
 **Student:**
-- 👤 **Name**: Nguyen Thanh Phong
-- 🏫 **University**: Ho Chi Minh City University of Technology (HCMUT)
-- 📧 **Email**: [phongnguyens2468@gmail.com](mailto:phongnguyens2468@gmail.com)
-- 💼 **LinkedIn**: [Nguyen Thanh Phong](https://www.linkedin.com/in/nguy%E1%BB%85n-thanh-phong-43b389294/)
-- 🔗 **GitHub**: [@PhongSkyper](https://github.com/PhongSkyper)
+- **Name**: Nguyen Thanh Phong
+- **University**: Ho Chi Minh City University of Technology (HCMUT)
+- **Email**: [phongnguyens2468@gmail.com](mailto:phongnguyens2468@gmail.com)
+- **LinkedIn**: [Nguyen Thanh Phong](https://www.linkedin.com/in/nguy%E1%BB%85n-thanh-phong-43b389294/)
+- **GitHub**: [@PhongSkyper](https://github.com/PhongSkyper)
 
 **Supervisor:**
-- 👨‍🏫 **Dr. Tran Hoang Linh**
-- 📚 Department of Electronics, Faculty of Electrical and Electronics Engineering
-- 🏫 Ho Chi Minh City University of Technology (HCMUT)
+- **Dr. Tran Hoang Linh**
+- Department of Electronics, Faculty of Electrical and Electronics Engineering
+- Ho Chi Minh City University of Technology (HCMUT)
 
 **Course**: Computer Architecture - L01  
 **Group**: 23  
@@ -270,20 +270,12 @@ this software for educational purposes.
 
 ---
 
-## 🌟 Contributing & Contact
+## Contributing & Contact
 
 For questions, suggestions, or contributions:
-- 📬 **Email**: phongnguyens2468@gmail.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/PhongSkyper/RISC-V-Processor/issues)
-- 🔀 **Pull Requests**: Welcome! Please follow the coding style.
+-  **Email**: phongnguyens2468@gmail.com
+-  **Issues**: [GitHub Issues](https://github.com/PhongSkyper/RISC-V-Processor/issues)
 
----
-
-<div align="center">
-
-### ⭐ If you find this project useful, please give it a star! ⭐
-
-**Made with ❤️ by Phong Nguyen | HCMUT**
 
 </div>
 
